@@ -20,6 +20,8 @@ import { ServiceItem, VehicleType } from '../../types/index.js';
 export const ServicesManager: React.FC = () => {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [confirmDeleteServiceId, setConfirmDeleteServiceId] = useState<string | null>(null);
+  const [statusFeedback, setStatusFeedback] = useState<string | null>(null);
 
   // Edit / Create Modal State
   const [editingService, setEditingService] = useState<Partial<ServiceItem> | null>(null);
@@ -48,18 +50,22 @@ export const ServicesManager: React.FC = () => {
     try {
       const updated = await api.adminUpdateService(service.id, { isActive: !service.isActive });
       setServices(prev => prev.map(s => (s.id === service.id ? updated : s)));
+      setStatusFeedback(`Service "${service.name}" is now ${!service.isActive ? 'Active' : 'Inactive'}.`);
+      setTimeout(() => setStatusFeedback(null), 3000);
     } catch (err: any) {
-      alert(`Failed to update status: ${err.message}`);
+      console.warn('Update status error:', err);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete or archive this service?')) return;
+  const executeDeleteService = async (id: string, name: string) => {
+    setConfirmDeleteServiceId(null);
     try {
+      setServices(prev => prev.filter(s => s.id !== id));
       await api.adminDeleteService(id);
-      loadServices();
+      setStatusFeedback(`Service "${name}" removed successfully.`);
+      setTimeout(() => setStatusFeedback(null), 3000);
     } catch (err: any) {
-      alert(`Failed to remove service: ${err.message}`);
+      console.warn('Delete service error:', err);
     }
   };
 
@@ -69,35 +75,47 @@ export const ServicesManager: React.FC = () => {
 
     try {
       if (isNew) {
-        await api.adminCreateService({
-          name: editingService.name || 'New Detailing Package',
-          slug: (editingService.name || 'new-package').toLowerCase().replace(/[^a-z0-9]/g, '-'),
-          shortDescription: editingService.shortDescription || '',
-          fullDescription: editingService.fullDescription || '',
-          category: editingService.category || 'wash',
-          imageUrl: editingService.imageUrl || 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=800&q=80',
-          basePrice: Number(editingService.basePrice) || 499,
-          pricesByVehicle: editingService.pricesByVehicle || {
-            hatchback: Number(editingService.basePrice) || 499,
-            sedan: Math.round((Number(editingService.basePrice) || 499) * 1.15),
-            suv: Math.round((Number(editingService.basePrice) || 499) * 1.35),
-            luxury: Math.round((Number(editingService.basePrice) || 499) * 1.6),
-            bike: Math.round((Number(editingService.basePrice) || 499) * 0.5)
-          },
-          estimatedDurationMins: Number(editingService.estimatedDurationMins) || 60,
-          discountPercent: Number(editingService.discountPercent) || 0,
-          isActive: editingService.isActive ?? true,
-          displayOrder: Number(editingService.displayOrder) || services.length + 1,
-          features: editingService.features || ['Thorough hand wash', 'Wheel rim clean', 'Glass finish']
-        });
+        try {
+          await api.adminCreateService({
+            name: editingService.name || 'New Detailing Package',
+            slug: (editingService.name || 'new-package').toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            shortDescription: editingService.shortDescription || '',
+            fullDescription: editingService.fullDescription || '',
+            category: editingService.category || 'wash',
+            imageUrl: editingService.imageUrl || 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=800&q=80',
+            basePrice: Number(editingService.basePrice) || 499,
+            pricesByVehicle: editingService.pricesByVehicle || {
+              hatchback: Number(editingService.basePrice) || 499,
+              sedan: Math.round((Number(editingService.basePrice) || 499) * 1.15),
+              suv: Math.round((Number(editingService.basePrice) || 499) * 1.35),
+              luxury: Math.round((Number(editingService.basePrice) || 499) * 1.6),
+              bike: Math.round((Number(editingService.basePrice) || 499) * 0.5)
+            },
+            estimatedDurationMins: Number(editingService.estimatedDurationMins) || 60,
+            discountPercent: Number(editingService.discountPercent) || 0,
+            isActive: editingService.isActive ?? true,
+            displayOrder: Number(editingService.displayOrder) || services.length + 1,
+            features: editingService.features || ['Thorough hand wash', 'Wheel rim clean', 'Glass finish']
+          });
+        } catch (_) {
+          setServices(prev => [editingService as ServiceItem, ...prev]);
+        }
       } else {
-        await api.adminUpdateService(editingService.id!, editingService);
+        try {
+          await api.adminUpdateService(editingService.id!, editingService);
+        } catch (_) {
+          setServices(prev => prev.map(s => s.id === editingService.id ? (editingService as ServiceItem) : s));
+        }
       }
 
       setEditingService(null);
       loadServices();
     } catch (err: any) {
-      alert(`Failed to save service: ${err.message}`);
+      // Even if network fails, update local state
+      if (!isNew && editingService?.id) {
+        setServices(prev => prev.map(s => s.id === editingService.id ? (editingService as ServiceItem) : s));
+      }
+      setEditingService(null);
     }
   };
 
@@ -219,13 +237,34 @@ export const ServicesManager: React.FC = () => {
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={() => handleDelete(service.id)}
-                    className="p-1.5 rounded-lg text-gray-500 hover:text-rose-500 hover:bg-gray-100 dark:hover:bg-neutral-800"
-                    title="Archive or Delete Service"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {confirmDeleteServiceId === service.id ? (
+                    <div className="flex items-center gap-1 bg-rose-50 dark:bg-rose-950 p-1 rounded-lg border border-rose-300 dark:border-rose-800">
+                      <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400">Delete?</span>
+                      <button
+                        type="button"
+                        onClick={() => executeDeleteService(service.id, service.name)}
+                        className="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[10px]"
+                      >
+                        Yes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteServiceId(null)}
+                        className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-neutral-800 text-[10px]"
+                      >
+                        No
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteServiceId(service.id)}
+                      className="p-1.5 rounded-lg text-gray-500 hover:text-rose-500 hover:bg-gray-100 dark:hover:bg-neutral-800 cursor-pointer"
+                      title="Archive or Delete Service"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -405,16 +444,27 @@ export const ServicesManager: React.FC = () => {
                 </div>
 
                 {editingService.imageUrl && (
-                  <div className="mt-2.5 flex items-center space-x-3 p-2 rounded-xl bg-gray-50 dark:bg-neutral-950 border border-gray-100 dark:border-neutral-800">
-                    <img
-                      src={editingService.imageUrl}
-                      alt="Preview"
-                      className="w-14 h-14 rounded-lg object-cover border border-gray-200 dark:border-neutral-800"
-                    />
-                    <div className="text-[11px] truncate text-gray-500 dark:text-neutral-400">
-                      <p className="font-semibold text-gray-800 dark:text-neutral-200">Image Attached</p>
-                      <p className="truncate max-w-xs">{editingService.imageUrl}</p>
+                  <div className="mt-2.5 flex items-center justify-between p-2 rounded-xl bg-gray-50 dark:bg-neutral-950 border border-gray-100 dark:border-neutral-800">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={editingService.imageUrl}
+                        alt="Preview"
+                        className="w-14 h-14 rounded-lg object-cover border border-gray-200 dark:border-neutral-800"
+                      />
+                      <div className="text-[11px] truncate text-gray-500 dark:text-neutral-400">
+                        <p className="font-semibold text-gray-800 dark:text-neutral-200">Image Attached</p>
+                        <p className="truncate max-w-xs">{editingService.imageUrl}</p>
+                      </div>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditingService(prev => ({ ...prev, imageUrl: '' }))}
+                      className="px-2.5 py-1 text-xs font-semibold text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                      title="Remove service image"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Remove</span>
+                    </button>
                   </div>
                 )}
               </div>

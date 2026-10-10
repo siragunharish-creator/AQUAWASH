@@ -9,7 +9,22 @@ export const Gallery: React.FC = () => {
   const [activeImage, setActiveImage] = useState<MediaAsset | null>(null);
 
   useEffect(() => {
-    api.getGallery().then(setMedia).catch(() => {});
+    const deletedIds: string[] = JSON.parse(localStorage.getItem('aquashine_deleted_media') || '[]');
+    const localCustom: MediaAsset[] = JSON.parse(localStorage.getItem('aquashine_custom_media') || '[]');
+
+    api.getGallery()
+      .then(res => {
+        const combined = [
+          ...res,
+          ...localCustom.filter(c => !res.some(r => r.id === c.id || r.url === c.url))
+        ];
+        const activeOnly = combined.filter(m => !deletedIds.includes(m.id) && m.isActive !== false);
+        setMedia(activeOnly);
+      })
+      .catch(() => {
+        const activeOnly = localCustom.filter(m => !deletedIds.includes(m.id) && m.isActive !== false);
+        setMedia(activeOnly);
+      });
   }, []);
 
   const defaultShowcase = [
@@ -18,49 +33,59 @@ export const Gallery: React.FC = () => {
       url: 'https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=1200&q=80',
       caption: 'Audi R8 V10 Plus undergoing 9H Ceramic Coating at OMR studio',
       altText: 'Audi sportscar ceramic coating in Chennai',
-      category: 'protection'
+      category: 'protection',
+      isActive: true
     },
     {
       id: 'd-2',
       url: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1200&q=80',
       caption: 'BMW 3 Series covered in dense pH-neutral snow foam bath',
       altText: 'BMW snow foam wash in Chennai',
-      category: 'wash'
+      category: 'wash',
+      isActive: true
     },
     {
       id: 'd-3',
       url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80',
       caption: 'Mercedes-Benz E-Class deep leather extraction & sanitization',
       altText: 'Mercedes leather conditioning',
-      category: 'detailing'
+      category: 'detailing',
+      isActive: true
     },
     {
       id: 'd-4',
       url: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1200&q=80',
       caption: 'Dual-action rotary machine paint correction eliminating swirls',
       altText: 'Machine paint polish',
-      category: 'detailing'
+      category: 'detailing',
+      isActive: true
     },
     {
       id: 'd-5',
       url: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80',
       caption: 'Triumph Street Triple superbike wash with Motul chain maintenance',
       altText: 'Superbike wash in Chennai',
-      category: 'specialty'
+      category: 'specialty',
+      isActive: true
     },
     {
       id: 'd-6',
       url: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=1200&q=80',
       caption: 'Engine bay degreasing with non-conductive electrical protection',
       altText: 'Engine bay detailing',
-      category: 'detailing'
+      category: 'detailing',
+      isActive: true
     }
   ];
 
+  const deletedIds: string[] = typeof window !== 'undefined'
+    ? JSON.parse(localStorage.getItem('aquashine_deleted_media') || '[]')
+    : [];
+
   const allItems = [
     ...media,
-    ...defaultShowcase.filter(d => !media.some(m => m.url === d.url))
-  ];
+    ...defaultShowcase.filter(d => !deletedIds.includes(d.id) && !media.some(m => m.url === d.url || m.id === d.id))
+  ].filter(item => !deletedIds.includes(item.id) && item.isActive !== false);
 
   const filtered = allItems.filter(item => {
     if (filter === 'all') return true;

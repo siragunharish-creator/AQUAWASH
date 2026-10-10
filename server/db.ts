@@ -1290,8 +1290,12 @@ export class DatabaseService {
   }
 
   // --- Media Assets & Local Image Upload ---
-  public async getMediaAssets(): Promise<MediaAsset[]> {
-    return this.localState!.mediaAssets.sort(
+  public async getMediaAssets(includeInactive: boolean = true): Promise<MediaAsset[]> {
+    let assets = this.localState!.mediaAssets;
+    if (!includeInactive) {
+      assets = assets.filter(m => m.isActive !== false);
+    }
+    return assets.sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
@@ -1299,6 +1303,7 @@ export class DatabaseService {
   public async addMediaAsset(asset: Omit<MediaAsset, 'id' | 'createdAt'>): Promise<MediaAsset> {
     const newAsset: MediaAsset = {
       ...asset,
+      isActive: asset.isActive !== undefined ? asset.isActive : true,
       id: `med-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       createdAt: new Date().toISOString()
     };
@@ -1307,12 +1312,24 @@ export class DatabaseService {
     return newAsset;
   }
 
+  public async updateMediaAsset(id: string, updates: Partial<MediaAsset>, adminEmail: string): Promise<MediaAsset | null> {
+    const asset = this.localState!.mediaAssets.find(m => m.id === id);
+    if (!asset) return null;
+    Object.assign(asset, updates);
+    this.saveLocalStore();
+    this.logAudit(adminEmail, 'UPDATE_MEDIA', 'media_assets', id, `Updated image status/metadata: ${asset.originalName || asset.caption || id}`);
+    return asset;
+  }
+
   public async deleteMediaAsset(id: string, adminEmail: string): Promise<boolean> {
     const idx = this.localState!.mediaAssets.findIndex(m => m.id === id);
-    if (idx === -1) return false;
-    const removed = this.localState!.mediaAssets.splice(idx, 1);
+    let name = id;
+    if (idx !== -1) {
+      const removed = this.localState!.mediaAssets.splice(idx, 1);
+      name = removed[0]?.originalName || id;
+    }
     this.saveLocalStore();
-    this.logAudit(adminEmail, 'DELETE_MEDIA', 'media_assets', id, `Deleted image: ${removed[0].originalName}`);
+    this.logAudit(adminEmail, 'DELETE_MEDIA', 'media_assets', id, `Deleted image: ${name}`);
     return true;
   }
 

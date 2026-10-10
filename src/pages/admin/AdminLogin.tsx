@@ -23,8 +23,8 @@ export const AdminLogin: React.FC = () => {
   const { login, isAuthenticated, isLoading, user, logout, authError } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  const [email, setEmail] = useState('harish');
-  const [password, setPassword] = useState('vshn1996');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -131,30 +131,6 @@ export const AdminLogin: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Credentials Card */}
-          <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 text-xs flex items-center justify-between">
-            <div>
-              <span className="font-bold text-sky-900 dark:text-sky-200 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-                Admin Credentials Configured:
-              </span>
-              <div className="text-[11px] text-sky-700 dark:text-sky-300 font-mono mt-0.5">
-                Username: <strong className="font-bold">harish</strong> • Password: <strong className="font-bold">vshn1996</strong>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('harish');
-                setPassword('vshn1996');
-                setErrorMsg(null);
-              }}
-              className="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] shadow-sm transition-colors cursor-pointer"
-            >
-              Auto-Fill
-            </button>
-          </div>
-
           {/* Already authenticated banner */}
           {isAuthenticated && user && !isLoading && (
             <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-xs text-emerald-900 dark:text-emerald-300 space-y-2">
@@ -202,7 +178,8 @@ export const AdminLogin: React.FC = () => {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="harish"
+                  placeholder="Enter username"
+                  autoComplete="username"
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
                 />
                 <Mail className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -219,7 +196,8 @@ export const AdminLogin: React.FC = () => {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="vshn1996"
+                  placeholder="Enter password"
+                  autoComplete="current-password"
                   className="w-full pl-11 pr-12 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
                 />
                 <Lock className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />

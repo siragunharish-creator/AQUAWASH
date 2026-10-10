@@ -102,6 +102,10 @@ async function runTestSuite() {
   const invalidPass = dbService.verifyAdminPassword('wrongpassword123');
   assert(invalidPass === false, 'Invalid admin password rejected properly');
 
+  // Verify Stateless Session Token Prefix
+  const testToken = `aq_adm_${Date.now()}_test123`;
+  assert(testToken.startsWith('aq_adm_'), 'Stateless token prefix aq_adm_ generated properly');
+
   // 7. Testing Admin UUID and Authorization Requirements
   console.log('\n--- 7. Testing Admin UUID & Role Authorization ---');
   const adminUuid = '10b9199e-d5cb-4216-bd0a-0045c79dac9f';

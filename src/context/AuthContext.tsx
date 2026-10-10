@@ -218,7 +218,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (_) {}
 
     setIsLoading(false);
-    const deniedMsg = 'Invalid credentials. Please use username: harish and password: vshn1996';
+    const deniedMsg = 'Invalid username or password. Please verify your credentials and try again.';
     setAuthError(deniedMsg);
     throw new Error(deniedMsg);
   };

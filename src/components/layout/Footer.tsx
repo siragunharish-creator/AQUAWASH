@@ -197,10 +197,11 @@ export const Footer: React.FC = () => {
             </Link>
             <Link
               to="/admin/login"
-              className="flex items-center hover:text-sky-400 transition-colors"
+              className="p-1 text-neutral-500 hover:text-sky-400 transition-colors flex items-center"
+              title="Admin"
+              aria-label="Admin"
             >
-              <Shield className="w-3.5 h-3.5 mr-1 text-neutral-400" />
-              Admin Portal
+              <Shield className="w-4 h-4" />
             </Link>
           </div>
         </div>

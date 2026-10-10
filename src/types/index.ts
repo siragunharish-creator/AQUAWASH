@@ -158,6 +158,7 @@ export interface MediaAsset {
   altText: string;
   caption: string;
   category: 'services' | 'gallery' | 'branding' | 'hero';
+  isActive?: boolean;
   createdAt: string;
 }
 

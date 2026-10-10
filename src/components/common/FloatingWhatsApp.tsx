@@ -113,13 +113,24 @@ export const FloatingWhatsApp: React.FC = () => {
       )}
 
       {/* Main Floating Trigger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open WhatsApp conversation"
-        className="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-xl shadow-emerald-500/30 hover:scale-105 transition-all duration-200 group"
-      >
-        <MessageCircle className="w-7 h-7 group-hover:rotate-6 transition-transform" />
-      </button>
+      <div className="relative flex items-center justify-center">
+        {/* Gentle ambient pulsing glow ring */}
+        {!isOpen && (
+          <span className="absolute -inset-1.5 rounded-full bg-emerald-500/35 animate-ping duration-1000 pointer-events-none" />
+        )}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Open WhatsApp conversation"
+          className={`relative w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-2xl shadow-emerald-500/40 hover:scale-110 active:scale-95 transition-all duration-300 group cursor-pointer ${
+            !isOpen ? 'animate-bounce [animation-duration:2.5s]' : ''
+          }`}
+        >
+          <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
+          {!isOpen && (
+            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-300 border-2 border-white dark:border-neutral-900 rounded-full animate-pulse" />
+          )}
+        </button>
+      </div>
     </div>
   );
 };
