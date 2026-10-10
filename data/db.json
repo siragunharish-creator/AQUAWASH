@@ -1,0 +1,964 @@
+{
+  "settings": {
+    "businessName": "AquaShine Car Care",
+    "tagline": "Drive Clean. Shine Bright.",
+    "phone": "+91 86681 81232",
+    "whatsappNumber": "+91 86681 81232",
+    "email": "contact@aquashinecarcare.in",
+    "address": "No. 42, Rajiv Gandhi Salai (OMR), Kandanchavadi, Perungudi",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "pincode": "600096",
+    "openingTime": "08:00",
+    "closingTime": "20:00",
+    "weeklyHolidays": [],
+    "slotDurationMins": 60,
+    "maxBookingsPerSlot": 3,
+    "taxPercentage": 18,
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "timezone": "Asia/Kolkata",
+    "instagramUrl": "https://instagram.com/aquashinecarcare",
+    "facebookUrl": "https://facebook.com/aquashinecarcare",
+    "youtubeUrl": "https://youtube.com/@aquashinecarcare",
+    "cancellationPolicy": "Free cancellation or rescheduling up to 2 hours before the scheduled appointment."
+  },
+  "content": {
+    "hero": {
+      "badge": "Chennai’s Premier Auto Detailing & Wash Studio",
+      "headline": "Your Car Deserves a Premium Clean.",
+      "subheadline": "Professional car washing and detailing, booked at your convenience with live slot reservation & instant WhatsApp confirmation.",
+      "ctaPrimaryText": "Book Your Wash",
+      "ctaSecondaryText": "Explore Services",
+      "bgImageUrl": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1920&q=85"
+    },
+    "about": {
+      "title": "Master Detailing Built for Chennai Enthusiasts",
+      "subtitle": "Uncompromising precision, certified ceramic formulas, and eco-friendly water recovery systems.",
+      "description": "AquaShine Car Care was founded in Chennai with a singular vision: bringing world-class automotive detailing standards to South India. From dealing with harsh coastal saline moisture along the ECR corridor to stubborn city traffic dust, our IDA-certified technicians treat every vehicle with surgical precision.",
+      "experienceYears": 8,
+      "carsDetailedCount": 14500,
+      "teamExpertsCount": 18,
+      "satisfactionRate": 99
+    },
+    "features": [
+      {
+        "id": "1",
+        "icon": "ShieldCheck",
+        "title": "Certified Paint Masters",
+        "description": "IDA trained detailers using non-acidic formulas and German dual-action paint polishers."
+      },
+      {
+        "id": "2",
+        "icon": "Droplets",
+        "title": "Zero-Swirl Foam Technology",
+        "description": "High-lubricity pH-neutral foam canons prevent micro-marring and swirl marks on clear coats."
+      },
+      {
+        "id": "3",
+        "icon": "Clock",
+        "title": "Guaranteed On-Time Slots",
+        "description": "Dedicated multi-bay facility in OMR Kandanchavadi with zero waiting delays."
+      },
+      {
+        "id": "4",
+        "icon": "Sparkles",
+        "title": "Instant WhatsApp Updates",
+        "description": "Automated booking alerts, progress updates, and digital inspection receipts sent to your WhatsApp."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How long does a standard exterior foam wash take?",
+        "answer": "A thorough exterior foam wash takes approximately 45 minutes, covering wheel rim decontamination, snow foam bath, dual-bucket contact wash, and streak-free microfibre drying."
+      },
+      {
+        "question": "Do you offer doorstep car detailing in Chennai?",
+        "answer": "Yes! We offer fully equipped mobile detailing units across OMR, Velachery, Adyar, Besant Nagar, ECR, and Anna Nagar. You can select \"Doorstep Service\" during the 4th step of booking."
+      },
+      {
+        "question": "What is the difference between ceramic coating and regular wax?",
+        "answer": "Regular carnauba wax lasts 1 to 2 months and washes away easily. Our 9H nano-ceramic coating chemically bonds with your car’s clear coat, offering 2 to 3 years of extreme hydrophobicity, scratch resistance, and UV sun protection."
+      },
+      {
+        "question": "Can I cancel or reschedule my booking?",
+        "answer": "Yes, you can easily reschedule or cancel your appointment free of charge up to 2 hours prior to your booked slot via your booking tracking page or by messaging us on WhatsApp."
+      }
+    ],
+    "seo": {
+      "metaTitle": "AquaShine Car Care | Premium Car Wash & Detailing Chennai",
+      "metaDescription": "Book premium car wash, ceramic coating & deep interior detailing in Chennai. Certified paint masters, instant WhatsApp updates, and doorstep service.",
+      "ogImage": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1200&q=80"
+    }
+  },
+  "vehicleCategories": [
+    {
+      "id": "hatchback",
+      "name": "Hatchback",
+      "displayName": "Hatchback / Compact",
+      "description": "Swift, i20, Altroz, Tiago, Baleno, Polo",
+      "multiplier": 1,
+      "iconName": "Car"
+    },
+    {
+      "id": "sedan",
+      "name": "Sedan",
+      "displayName": "Executive Sedan",
+      "description": "City, Verna, Ciaz, Slavia, Virtus, Octavia",
+      "multiplier": 1.15,
+      "iconName": "CarFront"
+    },
+    {
+      "id": "suv",
+      "name": "SUV",
+      "displayName": "Compact & Mid-size SUV",
+      "description": "Creta, Seltos, Nexon, Brezza, Harrier, XUV700",
+      "multiplier": 1.35,
+      "iconName": "Truck"
+    },
+    {
+      "id": "luxury",
+      "name": "Luxury Car",
+      "displayName": "Luxury & Premium German/British",
+      "description": "Mercedes-Benz, BMW, Audi, Porsche, Jaguar, Range Rover",
+      "multiplier": 1.6,
+      "iconName": "Sparkles"
+    },
+    {
+      "id": "bike",
+      "name": "Bike",
+      "displayName": "Motorcycles & Superbikes",
+      "description": "Royal Enfield, Duke, Ninja, Street Triple, Triumph",
+      "multiplier": 0.5,
+      "iconName": "Bike"
+    }
+  ],
+  "services": [
+    {
+      "id": "srv-1",
+      "slug": "exterior-car-wash",
+      "name": "Exterior Car Wash",
+      "shortDescription": "High-pressure pre-rinse, pH-neutral contact wash, wheel decontamination, and streak-free microfibre dry.",
+      "fullDescription": "Our signature exterior wash removes Chennai dust, road salt, and traffic film safely without scratching delicate clear coats. Includes wheel arch cleaning, rim face degreasing, tyre dressing with UV satin sheen, and exterior glass crystal finish.",
+      "category": "wash",
+      "imageUrl": "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 499,
+      "pricesByVehicle": {
+        "hatchback": 499,
+        "sedan": 599,
+        "suv": 699,
+        "luxury": 899,
+        "bike": 249
+      },
+      "estimatedDurationMins": 45,
+      "discountPercent": 10,
+      "isActive": true,
+      "displayOrder": 1,
+      "isPopular": false,
+      "features": [
+        "Dual-bucket scratch-free hand wash",
+        "pH-neutral snow foam rinse",
+        "Alloy wheel face & rim barrel de-greasing",
+        "Tyre dressing with non-sling UV dressing",
+        "Streak-free crystal glass cleaning"
+      ]
+    },
+    {
+      "id": "srv-2",
+      "slug": "foam-wash",
+      "name": "Foam Wash",
+      "shortDescription": "Dense high-adhesion ceramic snow foam bath, gentle mitt agitation, and hydrophobic rinse gloss boost.",
+      "fullDescription": "A rich, lubricating foam bath that lifts stubborn Chennai grime without swirl marks. Perfect for routine maintenance, offering intense gloss restoration and water-beading performance.",
+      "category": "wash",
+      "imageUrl": "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 699,
+      "pricesByVehicle": {
+        "hatchback": 699,
+        "sedan": 799,
+        "suv": 949,
+        "luxury": 1199,
+        "bike": 349
+      },
+      "estimatedDurationMins": 50,
+      "discountPercent": 15,
+      "isActive": true,
+      "displayOrder": 2,
+      "isPopular": true,
+      "features": [
+        "High-density German foam cannon application",
+        "Ultra-soft microfibre mitt agitation",
+        "Underbody chassis high-pressure blast",
+        "Micro-bead gloss drying aid spray",
+        "Door jambs wipe down"
+      ]
+    },
+    {
+      "id": "srv-3",
+      "slug": "interior-cleaning",
+      "name": "Interior Deep Cleaning",
+      "shortDescription": "High-suction vacuum, deep upholstery extraction, dashboard UV protection, and hospital-grade sanitization.",
+      "fullDescription": "Chennai humidity and traffic dust make car interiors prone to allergens and stains. We sanitize every corner, treat fabric or leather seats, vacuum boot floor, and apply anti-static dashboard conditioning.",
+      "category": "detailing",
+      "imageUrl": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 1199,
+      "pricesByVehicle": {
+        "hatchback": 1199,
+        "sedan": 1399,
+        "suv": 1699,
+        "luxury": 2199,
+        "bike": 499
+      },
+      "estimatedDurationMins": 75,
+      "discountPercent": 0,
+      "isActive": true,
+      "displayOrder": 3,
+      "isPopular": false,
+      "features": [
+        "3-stage deep cabin vacuum including trunk",
+        "Fabric/leather hot water stain extraction",
+        "AC vent steam sanitization & odor neutralizing",
+        "Dashboard, console & door card UV conditioner",
+        "Headliner dry foam spot clean"
+      ]
+    },
+    {
+      "id": "srv-4",
+      "slug": "interior-exterior-deep-cleaning",
+      "name": "Interior and Exterior Deep Cleaning",
+      "shortDescription": "Complete inside-out transformation. Deep foam wash combined with complete cabin sanitization and steam treatment.",
+      "fullDescription": "Our most popular complete package. Blends external snow foam decontamination with comprehensive cabin steam sanitization. Returns your vehicle to pristine showroom elegance inside and out.",
+      "category": "detailing",
+      "imageUrl": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 1799,
+      "pricesByVehicle": {
+        "hatchback": 1799,
+        "sedan": 2099,
+        "suv": 2499,
+        "luxury": 3299,
+        "bike": 699
+      },
+      "estimatedDurationMins": 110,
+      "discountPercent": 10,
+      "isActive": true,
+      "displayOrder": 4,
+      "isPopular": true,
+      "features": [
+        "Complete Exterior Foam Wash & Wheel De-greasing",
+        "Underbody & Engine Bay Dressing",
+        "Deep Interior Steam & Extraction Sanitization",
+        "Leather Conditioning / Fabric Shampoo",
+        "Long-lasting Carnauba Spray Wax Finish"
+      ]
+    },
+    {
+      "id": "srv-5",
+      "slug": "premium-car-detailing",
+      "name": "Premium Car Detailing",
+      "shortDescription": "Multi-stage single-cut machine paint correction, swirl elimination, gloss enhancement, and engine bay detailing.",
+      "fullDescription": "Designed for enthusiasts who demand perfection. Removes up to 85% of swirl marks, light scratches, and oxidation caused by automated washes and Chennai monsoon weather. Finished with ultra-deep mirror gloss sealant.",
+      "category": "detailing",
+      "imageUrl": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 3499,
+      "pricesByVehicle": {
+        "hatchback": 3499,
+        "sedan": 4299,
+        "suv": 5299,
+        "luxury": 6999,
+        "bike": 1499
+      },
+      "estimatedDurationMins": 180,
+      "discountPercent": 5,
+      "isActive": true,
+      "displayOrder": 5,
+      "isPopular": true,
+      "features": [
+        "Chemical iron fallout & clay bar paint decontamination",
+        "Rotary/DA Dual-action machine compound & polish",
+        "Engine bay degreasing and non-conductive dressing",
+        "Headlight clarity restoration",
+        "6-month synthetic polymer sealant coat"
+      ]
+    },
+    {
+      "id": "srv-6",
+      "slug": "ceramic-coating",
+      "name": "9H Ceramic Coating Protection",
+      "shortDescription": "True 9H nano-ceramic quartz shield. 2 to 3 years guaranteed hydrophobic repelling against acid rain, UV rays, and scratches.",
+      "fullDescription": "Ultimate protection for automotive paint against Chennai blistering sun, coastal salt air, and bird droppings. Bonds chemically to clear coats, imparting candy-like reflective gloss and extreme hydrophobicity.",
+      "category": "protection",
+      "imageUrl": "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 9999,
+      "pricesByVehicle": {
+        "hatchback": 9999,
+        "sedan": 12499,
+        "suv": 15999,
+        "luxury": 21999,
+        "bike": 4499
+      },
+      "estimatedDurationMins": 360,
+      "discountPercent": 15,
+      "isActive": true,
+      "displayOrder": 6,
+      "isPopular": false,
+      "features": [
+        "2-stage precision paint correction prior to coating",
+        "Certified 9H Nano-Ceramic 2-layer body application",
+        "Windshield & glass hydrophobic ceramic coating",
+        "Alloy wheel ceramic heat-shield coat",
+        "2-Year official AquaShine warranty & warranty card"
+      ]
+    },
+    {
+      "id": "srv-7",
+      "slug": "bike-wash",
+      "name": "Bike Wash & Chain Care",
+      "shortDescription": "Specialized two-wheeler safe foam wash, chain degrease & lube with Motul, engine fin cleaning, and exhaust polish.",
+      "fullDescription": "Tailored care for daily commuters and high-performance superbikes. We use pH-neutral cleaners safe for exposed wiring, anodized parts, chains, and matte paints.",
+      "category": "specialty",
+      "imageUrl": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 349,
+      "pricesByVehicle": {
+        "hatchback": 349,
+        "sedan": 349,
+        "suv": 349,
+        "luxury": 349,
+        "bike": 349
+      },
+      "estimatedDurationMins": 35,
+      "discountPercent": 0,
+      "isActive": true,
+      "displayOrder": 7,
+      "isPopular": false,
+      "features": [
+        "Safe low-pressure foam wash on electronics",
+        "Chain cleaning with grunge brush & Motul lube",
+        "Engine fin & radiator bug removal",
+        "Silencer heat-resistant polish",
+        "Matte/Gloss tank wax protection"
+      ]
+    },
+    {
+      "id": "srv-8",
+      "slug": "suv-wash",
+      "name": "SUV Heavy Duty Wash & Mud De-con",
+      "shortDescription": "Designed specifically for SUVs, 4x4s, and crossovers tackling highway runs and off-road grit.",
+      "fullDescription": "Comprehensive mud removal, chassis underside flushing, roof rack scrubbing, oversized wheel wells wash, and interior dog hair/sand vacuuming.",
+      "category": "wash",
+      "imageUrl": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 899,
+      "pricesByVehicle": {
+        "hatchback": 899,
+        "sedan": 899,
+        "suv": 899,
+        "luxury": 1299,
+        "bike": 349
+      },
+      "estimatedDurationMins": 60,
+      "discountPercent": 10,
+      "isActive": true,
+      "displayOrder": 8,
+      "isPopular": false,
+      "features": [
+        "Heavy-duty mud dissolver & high-volume rinse",
+        "Chassis flush nozzle system",
+        "Roof luggage rails & spare wheel scrub",
+        "Step-bar degrease and skid-plate clean",
+        "All-weather rubber mats pressure wash"
+      ]
+    },
+    {
+      "id": "srv-9",
+      "slug": "luxury-car-detailing",
+      "name": "Luxury Car Concierge Detailing",
+      "shortDescription": "Bespoke white-glove treatment for Mercedes, BMW, Audi, Porsche, Range Rover, and exotic vehicles.",
+      "fullDescription": "Our master detailers pamper your prized automobile with Swissvax carnauba wax, Connolly leather balms, ultrasonic crevice purging, and uncompromised precision.",
+      "category": "specialty",
+      "imageUrl": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80",
+      "basePrice": 4999,
+      "pricesByVehicle": {
+        "hatchback": 4999,
+        "sedan": 5499,
+        "suv": 6499,
+        "luxury": 7999,
+        "bike": 2499
+      },
+      "estimatedDurationMins": 210,
+      "discountPercent": 10,
+      "isActive": true,
+      "displayOrder": 9,
+      "isPopular": true,
+      "features": [
+        "Dedicated Master Detailer with 10+ yrs experience",
+        "Swissvax hand-rubbed carnauba organic wax",
+        "Alcantara & Connolly leather nourishing balm",
+        "Ultrasonic air purger & ionized air sanitization",
+        "Scratch inspection report with digital paint depth meter"
+      ]
+    }
+  ],
+  "bookings": [
+    {
+      "id": "bk-1791597663446-v0h69",
+      "bookingReference": "AQ-2610-9150",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "08:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T02:01:03.446Z",
+      "updatedAt": "2026-10-10T02:01:03.447Z"
+    },
+    {
+      "id": "bk-1791597636475-k5ozf",
+      "bookingReference": "AQ-2610-9228",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "08:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T02:00:36.475Z",
+      "updatedAt": "2026-10-10T02:00:36.475Z"
+    },
+    {
+      "id": "bk-1791597396842-gp788",
+      "bookingReference": "AQ-2610-2866",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "08:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T01:56:36.842Z",
+      "updatedAt": "2026-10-10T01:56:36.843Z"
+    },
+    {
+      "id": "bk-1791547419222-p0361",
+      "bookingReference": "AQ-2610-9252",
+      "customerName": "Suresh Raina",
+      "customerPhone": "9840199887",
+      "customerWhatsapp": "9840199887",
+      "vehicleType": "suv",
+      "vehicleModel": "Tata Harrier Dark Edition",
+      "registrationNumber": "TN 14 CD 1234",
+      "appointmentDate": "2026-10-15",
+      "appointmentTime": "11:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 949,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 949,
+      "discountAmount": 142,
+      "taxAmount": 145,
+      "totalAmount": 952,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-09T12:03:39.222Z",
+      "updatedAt": "2026-10-10T01:12:58.331Z"
+    },
+    {
+      "id": "bk-1791547349232-o8sna",
+      "bookingReference": "AQ-2610-7176",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-09",
+      "appointmentTime": "08:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-09T12:02:29.232Z",
+      "updatedAt": "2026-10-09T12:02:29.233Z"
+    },
+    {
+      "id": "bk-101",
+      "bookingReference": "AQ-2610-8491",
+      "customerName": "Sanjay Kumar",
+      "customerPhone": "+91 98401 23456",
+      "customerWhatsapp": "+91 98401 23456",
+      "customerEmail": "sanjay.k@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 07 BZ 4521",
+      "appointmentDate": "2026-10-09",
+      "appointmentTime": "10:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-4",
+          "serviceName": "Interior and Exterior Deep Cleaning",
+          "price": 2099,
+          "durationMins": 110
+        }
+      ],
+      "subtotal": 2099,
+      "discountAmount": 210,
+      "taxAmount": 340,
+      "totalAmount": 2229,
+      "status": "Confirmed",
+      "paymentStatus": "Paid",
+      "paymentMethod": "UPI / GPay",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-09T07:02:29.163Z",
+      "updatedAt": "2026-10-09T12:02:29.163Z"
+    },
+    {
+      "id": "bk-102",
+      "bookingReference": "AQ-2610-9124",
+      "customerName": "Meera Krishnan",
+      "customerPhone": "+91 98840 55667",
+      "customerWhatsapp": "+91 98840 55667",
+      "customerEmail": "meera.krish@example.com",
+      "vehicleType": "suv",
+      "vehicleModel": "Kia Seltos GTX+",
+      "registrationNumber": "TN 14 AQ 9988",
+      "appointmentDate": "2026-10-09",
+      "appointmentTime": "14:00",
+      "serviceLocation": "doorstep",
+      "locationAddress": "Flat 4B, Ceebros Boulevard, Thoraipakkam, OMR, Chennai",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 949,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 949,
+      "discountAmount": 142,
+      "taxAmount": 145,
+      "totalAmount": 952,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-09T10:02:29.163Z",
+      "updatedAt": "2026-10-09T12:02:29.163Z"
+    }
+  ],
+  "mediaAssets": [
+    {
+      "id": "med-1",
+      "filename": "ceramic_coating_audi.jpg",
+      "originalName": "Audi R8 Detailing Bay.jpg",
+      "url": "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=1200&q=80",
+      "storagePath": "car-wash-media/ceramic_coating_audi.jpg",
+      "fileSize": 2450000,
+      "mimeType": "image/jpeg",
+      "altText": "Audi sportscar undergoing 9H ceramic coating at AquaShine Chennai studio",
+      "caption": "Audi sportscar undergoing 9H ceramic coating in OMR facility",
+      "category": "gallery",
+      "createdAt": "2026-10-09T12:02:29.163Z"
+    },
+    {
+      "id": "med-2",
+      "filename": "foam_wash_bmw.jpg",
+      "originalName": "BMW Snow Foam.jpg",
+      "url": "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1200&q=80",
+      "storagePath": "car-wash-media/foam_wash_bmw.jpg",
+      "fileSize": 1820000,
+      "mimeType": "image/jpeg",
+      "altText": "Dense snow foam bath application on BMW sedan",
+      "caption": "High-density snow foam pre-wash lifting road grime",
+      "category": "gallery",
+      "createdAt": "2026-10-09T12:02:29.163Z"
+    },
+    {
+      "id": "med-3",
+      "filename": "interior_steam_sanitization.jpg",
+      "originalName": "Interior Steam Detail.jpg",
+      "url": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
+      "storagePath": "car-wash-media/interior_steam_sanitization.jpg",
+      "fileSize": 2100000,
+      "mimeType": "image/jpeg",
+      "altText": "Deep leather conditioning and interior steam sanitization",
+      "caption": "Hospital-grade interior steam extraction and leather nourishment",
+      "category": "gallery",
+      "createdAt": "2026-10-09T12:02:29.163Z"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t-1",
+      "customerName": "Karthik Ramanathan",
+      "location": "Adyar, Chennai",
+      "vehicleModel": "BMW 3 Series Gran Limousine",
+      "serviceUsed": "9H Ceramic Coating Protection",
+      "rating": 5,
+      "comment": "AquaShine transformed my BMW after months of coastal Chennai humidity. The swirl marks are completely gone and the water beading during rain is unbelievable! [Demo Testimonial]",
+      "isDemo": true,
+      "isActive": true,
+      "date": "2026-09-15"
+    },
+    {
+      "id": "t-2",
+      "customerName": "Priya Sundar",
+      "location": "OMR, Chennai",
+      "vehicleModel": "Hyundai Creta SX",
+      "serviceUsed": "Interior & Exterior Deep Cleaning",
+      "rating": 5,
+      "comment": "Booked an appointment online and got instant WhatsApp confirmation. The team at their Kandanchavadi hub was polite, timely, and my Creta looks brand new inside! [Demo Testimonial]",
+      "isDemo": true,
+      "isActive": true,
+      "date": "2026-09-28"
+    },
+    {
+      "id": "t-3",
+      "customerName": "Venkatesh S.",
+      "location": "Anna Nagar, Chennai",
+      "vehicleModel": "Tata Safari Dark Edition",
+      "serviceUsed": "SUV Heavy Duty Wash & Mud De-con",
+      "rating": 5,
+      "comment": "The high-pressure chassis wash removed weeks of highway red mud thoroughly. Exceptional attention to detail in Chennai. Highly recommended! [Demo Testimonial]",
+      "isDemo": true,
+      "isActive": true,
+      "date": "2026-10-02"
+    },
+    {
+      "id": "t-4",
+      "customerName": "Ashwin Natarajan",
+      "location": "Velachery, Chennai",
+      "vehicleModel": "Mercedes-Benz E-Class",
+      "serviceUsed": "Luxury Car Concierge Detailing",
+      "rating": 5,
+      "comment": "True white-glove service. Leather felt supple, engine bay was spotless, and the car smelled wonderful without harsh artificial scents. [Demo Testimonial]",
+      "isDemo": true,
+      "isActive": true,
+      "date": "2026-10-06"
+    }
+  ],
+  "whatsappLogs": [
+    {
+      "bookingReference": "AQ-2610-9252",
+      "recipientType": "owner",
+      "recipientPhone": "+91 86681 81232",
+      "messageType": "booking_created",
+      "status": "simulated",
+      "providerResponse": {
+        "status": "simulated_payload_logged",
+        "recipient": "918668181232",
+        "notice": "Meta Cloud API credentials pending in environment variables.",
+        "timestamp": "2026-10-09T12:03:39.231Z"
+      },
+      "providerMessageId": "wamid.simulated.1791547419231.2770",
+      "id": "walog-1791547419231-529",
+      "retryCount": 0,
+      "lastAttemptAt": "2026-10-09T12:03:39.231Z",
+      "createdAt": "2026-10-09T12:03:39.231Z"
+    },
+    {
+      "bookingReference": "AQ-2610-9252",
+      "recipientType": "customer",
+      "recipientPhone": "9840199887",
+      "messageType": "booking_created",
+      "status": "simulated",
+      "providerResponse": {
+        "status": "simulated_payload_logged",
+        "recipient": "919840199887",
+        "notice": "Meta Cloud API credentials pending in environment variables.",
+        "timestamp": "2026-10-09T12:03:39.230Z"
+      },
+      "providerMessageId": "wamid.simulated.1791547419230.9723",
+      "id": "walog-1791547419231-573",
+      "retryCount": 0,
+      "lastAttemptAt": "2026-10-09T12:03:39.231Z",
+      "createdAt": "2026-10-09T12:03:39.231Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "aud-1791597663447-279",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9150",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T02:01:03.447Z"
+    },
+    {
+      "id": "aud-1791597636476-587",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9228",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T02:00:36.476Z"
+    },
+    {
+      "id": "aud-1791597396843-16",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-2866",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T01:56:36.843Z"
+    },
+    {
+      "id": "aud-1791594778331-114",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:58.331Z"
+    },
+    {
+      "id": "aud-1791594776784-942",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Completed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:56.784Z"
+    },
+    {
+      "id": "aud-1791594775227-894",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:55.227Z"
+    },
+    {
+      "id": "aud-1791594772703-164",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:52.703Z"
+    },
+    {
+      "id": "aud-1791594771818-442",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Paid)",
+      "timestamp": "2026-10-10T01:12:51.818Z"
+    },
+    {
+      "id": "aud-1791594770377-143",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Paid)",
+      "timestamp": "2026-10-10T01:12:50.377Z"
+    },
+    {
+      "id": "aud-1791594769294-888",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:49.294Z"
+    },
+    {
+      "id": "aud-1791594769078-981",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:49.078Z"
+    },
+    {
+      "id": "aud-1791594768906-702",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:48.906Z"
+    },
+    {
+      "id": "aud-1791594768725-722",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:48.725Z"
+    },
+    {
+      "id": "aud-1791594768019-561",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:48.019Z"
+    },
+    {
+      "id": "aud-1791594766699-917",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:46.699Z"
+    },
+    {
+      "id": "aud-1791594765749-364",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:12:45.749Z"
+    },
+    {
+      "id": "aud-1791594762208-436",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "RESCHEDULE_BOOKING",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Rescheduled from 2026-10-15 11:00 to 2026-10-15 11:00",
+      "timestamp": "2026-10-10T01:12:42.208Z"
+    },
+    {
+      "id": "aud-1791594719148-828",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-9252",
+      "details": "Changed status to Confirmed (Payment: Pending)",
+      "timestamp": "2026-10-10T01:11:59.148Z"
+    },
+    {
+      "id": "aud-1791594638630-691",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "ADMIN_LOGIN",
+      "targetType": "auth",
+      "targetId": "session",
+      "details": "Administrator logged in successfully",
+      "timestamp": "2026-10-10T01:10:38.630Z"
+    },
+    {
+      "id": "aud-1791594562073-87",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "ADMIN_LOGIN",
+      "targetType": "auth",
+      "targetId": "session",
+      "details": "Administrator logged in successfully",
+      "timestamp": "2026-10-10T01:09:22.073Z"
+    },
+    {
+      "id": "aud-1791547409280-583",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "ADMIN_LOGIN",
+      "targetType": "auth",
+      "targetId": "session",
+      "details": "Administrator logged in successfully",
+      "timestamp": "2026-10-09T12:03:29.280Z"
+    },
+    {
+      "id": "aud-1791547349233-162",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-7176",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-09T12:02:29.233Z"
+    },
+    {
+      "id": "aud-1",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "System Bootstrapped",
+      "targetType": "system",
+      "targetId": "all",
+      "details": "Initial seed services, pricing matrix, and business settings generated.",
+      "timestamp": "2026-10-09T12:02:29.163Z"
+    }
+  ],
+  "adminPasswordHash": "AquaShineAdmin2026!"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "AquaShine Car Care",
+  "description": "Premium car wash and luxury auto detailing booking platform in Chennai, Tamil Nadu with real-time slot scheduling and WhatsApp notifications.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
