@@ -398,6 +398,75 @@
   ],
   "bookings": [
     {
+      "id": "bk-1791599821749-9a0ts",
+      "bookingReference": "AQ-2610-2204",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "09:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T02:37:01.749Z",
+      "updatedAt": "2026-10-10T02:37:01.755Z"
+    },
+    {
+      "id": "bk-1791598028478-0vh0q",
+      "bookingReference": "AQ-2610-8020",
+      "customerName": "hk",
+      "customerPhone": "8925834804",
+      "customerWhatsapp": "8925834804",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda",
+      "registrationNumber": "TN03AC5977",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "09:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-1",
+          "serviceName": "Exterior Car Wash",
+          "price": 599,
+          "durationMins": 45
+        },
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 1398,
+      "discountAmount": 180,
+      "taxAmount": 219,
+      "totalAmount": 1437,
+      "status": "Pending",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T02:07:08.478Z",
+      "updatedAt": "2026-10-10T02:07:08.478Z"
+    },
+    {
       "id": "bk-1791597663446-v0h69",
       "bookingReference": "AQ-2610-9150",
       "customerName": "Karthik Raja",
@@ -624,6 +693,19 @@
   ],
   "mediaAssets": [
     {
+      "filename": "gemini_generated_image_9jifvo9jifvo9jif_1791597798314_226970.png",
+      "originalName": "Gemini_Generated_Image_9jifvo9jifvo9jif.png",
+      "url": "/uploads/gemini_generated_image_9jifvo9jifvo9jif_1791597798314_226970.png",
+      "storagePath": "uploads/gemini_generated_image_9jifvo9jifvo9jif_1791597798314_226970.png",
+      "fileSize": 1427947,
+      "mimeType": "image/png",
+      "altText": "AquaShine Chennai Detailing - Gemini_Generated_Image_9jifvo9jifvo9jif",
+      "caption": "Gemini Generated Image 9jifvo9jifvo9jif",
+      "category": "gallery",
+      "id": "med-1791597798353-921",
+      "createdAt": "2026-10-10T02:03:18.353Z"
+    },
+    {
       "id": "med-1",
       "filename": "ceramic_coating_audi.jpg",
       "originalName": "Audi R8 Detailing Bay.jpg",
@@ -715,6 +797,42 @@
   ],
   "whatsappLogs": [
     {
+      "bookingReference": "AQ-2610-8020",
+      "recipientType": "owner",
+      "recipientPhone": "+91 86681 81232",
+      "messageType": "booking_created",
+      "status": "simulated",
+      "providerResponse": {
+        "status": "simulated_payload_logged",
+        "recipient": "918668181232",
+        "notice": "Meta Cloud API credentials pending in environment variables.",
+        "timestamp": "2026-10-10T02:07:08.491Z"
+      },
+      "providerMessageId": "wamid.simulated.1791598028491.444",
+      "id": "walog-1791598028491-835",
+      "retryCount": 0,
+      "lastAttemptAt": "2026-10-10T02:07:08.491Z",
+      "createdAt": "2026-10-10T02:07:08.491Z"
+    },
+    {
+      "bookingReference": "AQ-2610-8020",
+      "recipientType": "customer",
+      "recipientPhone": "8925834804",
+      "messageType": "booking_created",
+      "status": "simulated",
+      "providerResponse": {
+        "status": "simulated_payload_logged",
+        "recipient": "918925834804",
+        "notice": "Meta Cloud API credentials pending in environment variables.",
+        "timestamp": "2026-10-10T02:07:08.488Z"
+      },
+      "providerMessageId": "wamid.simulated.1791598028488.8664",
+      "id": "walog-1791598028489-324",
+      "retryCount": 0,
+      "lastAttemptAt": "2026-10-10T02:07:08.489Z",
+      "createdAt": "2026-10-10T02:07:08.489Z"
+    },
+    {
       "bookingReference": "AQ-2610-9252",
       "recipientType": "owner",
       "recipientPhone": "+91 86681 81232",
@@ -752,6 +870,42 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud-1791599821756-432",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-2204",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T02:37:01.756Z"
+    },
+    {
+      "id": "aud-1791599729651-880",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "ADMIN_LOGIN",
+      "targetType": "auth",
+      "targetId": "session",
+      "details": "Administrator logged in successfully",
+      "timestamp": "2026-10-10T02:35:29.651Z"
+    },
+    {
+      "id": "aud-1791597798353-399",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPLOAD_IMAGE",
+      "targetType": "media_assets",
+      "targetId": "med-1791597798353-921",
+      "details": "Uploaded Gemini_Generated_Image_9jifvo9jifvo9jif.png (1394.5 KB)",
+      "timestamp": "2026-10-10T02:03:18.353Z"
+    },
+    {
+      "id": "aud-1791597769938-765",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "ADMIN_LOGIN",
+      "targetType": "auth",
+      "targetId": "session",
+      "details": "Administrator logged in successfully",
+      "timestamp": "2026-10-10T02:02:49.938Z"
+    },
     {
       "id": "aud-1791597663447-279",
       "adminEmail": "admin@aquashinecarcare.in",

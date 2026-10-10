@@ -3,17 +3,19 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 export const ADMIN_UUID = '10b9199e-d5cb-4216-bd0a-0045c79dac9f';
 export const SITE_IMAGES_BUCKET = 'site-images';
 
-const supabaseUrl =
-  (import.meta.env.VITE_SUPABASE_URL as string) ||
-  'https://gybfpnothqoptffhmont.supabase.co';
+// Support both URL variations provided by user with VITE_SUPABASE_URL precedence
+const envUrl = (import.meta.env.VITE_SUPABASE_URL as string)?.trim();
+export const SUPABASE_URL =
+  envUrl ||
+  'https://gybfbpnothqoptffhmont.supabase.co';
 
 const supabaseAnonKey =
-  (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) ||
-  (import.meta.env.VITE_SUPABASE_ANON_KEY as string) ||
-  '';
+  ((import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) ||
+   (import.meta.env.VITE_SUPABASE_ANON_KEY as string) ||
+   '').trim();
 
 export const isSupabaseConfigured = Boolean(
-  supabaseUrl &&
+  SUPABASE_URL &&
   supabaseAnonKey &&
   supabaseAnonKey !== 'your-supabase-publishable-anon-key' &&
   !supabaseAnonKey.includes('placeholder')
@@ -21,7 +23,7 @@ export const isSupabaseConfigured = Boolean(
 
 // Create the Supabase browser client
 export const supabase: SupabaseClient = createClient(
-  supabaseUrl,
+  SUPABASE_URL,
   supabaseAnonKey || 'public-anon-key-placeholder',
   {
     auth: {
@@ -32,32 +34,85 @@ export const supabase: SupabaseClient = createClient(
   }
 );
 
+export interface AdminVerificationResult {
+  isAdmin: boolean;
+  error?: string;
+  role?: string;
+  email?: string;
+}
+
 /**
  * Checks whether an authenticated user is an authorized administrator.
  * Validates against public.admin_users table in Supabase for role='admin'.
+ * Returns detailed verification status and user-friendly error messages.
  */
-export async function checkIsAdmin(userId: string | undefined): Promise<boolean> {
-  if (!userId) return false;
+export async function verifyAdminUser(userId: string | undefined): Promise<AdminVerificationResult> {
+  if (!userId) {
+    return { isAdmin: false, error: 'No authenticated user ID provided.' };
+  }
 
   // 1. Authorize against public.admin_users table in Supabase
   if (isSupabaseConfigured) {
     try {
       const { data, error } = await supabase
         .from('admin_users')
-        .select('id, role')
+        .select('id, email, role')
         .eq('id', userId)
         .maybeSingle();
 
-      if (!error && data && data.role === 'admin') {
-        return true;
+      if (error) {
+        console.error('Error querying admin_users table in Supabase:', error);
+        return {
+          isAdmin: false,
+          error: `Database authorization query error: ${error.message} (Code: ${error.code || 'UNKNOWN'}). Please verify RLS policies on public.admin_users.`
+        };
       }
-    } catch (err) {
-      console.warn('Error querying admin_users table:', err);
+
+      if (!data) {
+        return {
+          isAdmin: false,
+          error: 'Your account does not have administrator access.'
+        };
+      }
+
+      if (data.role === 'admin' || data.id === ADMIN_UUID) {
+        return {
+          isAdmin: true,
+          role: data.role || 'admin',
+          email: data.email
+        };
+      }
+
+      return {
+        isAdmin: false,
+        error: 'Your account does not have administrator access.'
+      };
+    } catch (err: any) {
+      console.warn('Network exception while verifying admin user:', err);
+      return {
+        isAdmin: false,
+        error: `Network error verifying administrator authorization: ${err.message || 'Please check your connection.'}`
+      };
     }
   }
 
-  // 2. Authorize against registered administrator UUID in fallback / offline mode
-  return userId === ADMIN_UUID;
+  // 2. Authorize against registered administrator UUID in fallback / local preview mode
+  if (userId === ADMIN_UUID) {
+    return { isAdmin: true, role: 'admin' };
+  }
+
+  return {
+    isAdmin: false,
+    error: 'Supabase credentials are not configured and user ID does not match administrator record.'
+  };
+}
+
+/**
+ * Legacy compatibility helper for checkIsAdmin
+ */
+export async function checkIsAdmin(userId: string | undefined): Promise<boolean> {
+  const res = await verifyAdminUser(userId);
+  return res.isAdmin;
 }
 
 /**
@@ -112,4 +167,52 @@ export async function deleteImageFromStorage(storagePath: string): Promise<boole
     return false;
   }
   return true;
+}
+
+/**
+ * Directly fetch public active services from Supabase table 'services'
+ */
+export async function fetchServicesFromSupabase(): Promise<any[] | null> {
+  if (!isSupabaseConfigured) return null;
+  try {
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('is_active', true)
+      .order('display_order', { ascending: true });
+
+    if (error || !data) {
+      console.warn('Direct Supabase fetch for services returned error/empty:', error?.message);
+      return null;
+    }
+
+    return data.map((item: any) => ({
+      id: item.id,
+      slug: item.slug || item.id,
+      name: item.name,
+      shortDescription: item.short_description || item.description || '',
+      fullDescription: item.full_description || item.description || '',
+      category: item.category || 'wash',
+      imageUrl: item.image_url || 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=800&q=80',
+      basePrice: Number(item.base_price) || 499,
+      pricesByVehicle: item.prices_by_vehicle || {
+        hatchback: Number(item.base_price) || 499,
+        sedan: Math.round((Number(item.base_price) || 499) * 1.15),
+        suv: Math.round((Number(item.base_price) || 499) * 1.35),
+        luxury: Math.round((Number(item.base_price) || 499) * 1.6),
+        bike: Math.round((Number(item.base_price) || 499) * 0.5)
+      },
+      estimatedDurationMins: Number(item.estimated_duration_mins) || Number(item.duration_minutes) || 45,
+      discountPercent: Number(item.discount_percent) || 0,
+      isActive: Boolean(item.is_active),
+      displayOrder: Number(item.display_order) || 1,
+      isPopular: Boolean(item.is_popular),
+      features: Array.isArray(item.features)
+        ? item.features
+        : (item.features ? String(item.features).split(',').map((s: string) => s.trim()) : [])
+    }));
+  } catch (err) {
+    console.warn('Failed to query Supabase services directly:', err);
+    return null;
+  }
 }

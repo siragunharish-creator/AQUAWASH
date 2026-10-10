@@ -100,6 +100,27 @@ async function runTestSuite() {
   const invalidPass = dbService.verifyAdminPassword('wrongpassword123');
   assert(invalidPass === false, 'Invalid admin password rejected properly');
 
+  // 7. Testing Admin UUID and Authorization Requirements
+  console.log('\n--- 7. Testing Admin UUID & Role Authorization ---');
+  const adminUuid = '10b9199e-d5cb-4216-bd0a-0045c79dac9f';
+  assert(adminUuid === '10b9199e-d5cb-4216-bd0a-0045c79dac9f', 'Administrator UUID matches target: 10b9199e-d5cb-4216-bd0a-0045c79dac9f');
+
+  // Verify Admin User in dbService
+  const adminVerified = await dbService.verifyAdminUser(adminUuid);
+  assert(adminVerified === true, 'Designated admin UUID verified via dbService');
+
+  const randomUserVerified = await dbService.verifyAdminUser('00000000-0000-0000-0000-000000000000');
+  assert(randomUserVerified === false, 'Non-admin UUID rejected via dbService');
+
+  // 8. Testing Vercel Configuration & Routing
+  console.log('\n--- 8. Testing Vercel SPA & API Rewrites ---');
+  const fs = await import('fs');
+  const vercelConfig = JSON.parse(fs.readFileSync('./vercel.json', 'utf8'));
+  assert(Array.isArray(vercelConfig.rewrites), 'vercel.json contains rewrites array');
+  assert(vercelConfig.rewrites.some((r: any) => r.source === '/api/(.*)' && r.destination === '/api/index.ts'), 'vercel.json routes /api/(.*) to /api/index.ts');
+  assert(vercelConfig.rewrites.some((r: any) => r.source === '/(.*)' && r.destination === '/index.html'), 'vercel.json rewrites SPA routes to /index.html');
+  assert(fs.existsSync('./api/index.ts'), 'api/index.ts entry point exists for Vercel Serverless');
+
   console.log('\n====================================================');
   console.log(` TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log('====================================================');

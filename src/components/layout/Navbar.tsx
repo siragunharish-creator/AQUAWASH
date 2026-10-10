@@ -118,7 +118,7 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Right Action Icons: Theme Toggle + Admin Icon + Mobile Menu Button */}
+          {/* Right Action Icons: Theme Toggle + Admin Button + Mobile Menu Button */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Theme Toggle Button */}
             <button
@@ -134,16 +134,28 @@ export const Navbar: React.FC = () => {
               )}
             </button>
 
-            {/* Admin Portal Icon (Shield) */}
+            {/* Admin Console Button (Desktop) - Always visible, navigates to /admin/login */}
             <Link
-              to={isAuthenticated ? '/admin' : '/admin/login'}
-              className="relative p-2.5 rounded-xl border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-sky-50 dark:hover:bg-sky-950/40 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-800 transition-colors group"
-              title="Admin Portal Login"
+              to="/admin/login"
+              className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-gray-200 dark:border-neutral-800 text-gray-700 dark:text-neutral-200 hover:text-sky-600 dark:hover:text-sky-400 hover:border-sky-300 dark:hover:border-sky-800 hover:bg-sky-50 dark:hover:bg-sky-950/40 transition-colors shadow-sm"
+              title="Admin Console"
+              aria-label="Admin Console"
             >
-              <Shield className="w-5 h-5" />
+              <Shield className="w-4 h-4 text-sky-500" />
+              <span>Admin Console</span>
               {isAuthenticated && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-black"></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-black"></span>
               )}
+            </Link>
+
+            {/* Admin Console Icon (Mobile Header) - Always visible on small screens, navigates to /admin/login */}
+            <Link
+              to="/admin/login"
+              className="sm:hidden p-2.5 rounded-xl border border-gray-200 dark:border-neutral-800 text-gray-700 dark:text-neutral-200 hover:bg-sky-50 dark:hover:bg-sky-950/40 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+              title="Admin Console"
+              aria-label="Admin Console"
+            >
+              <Shield className="w-5 h-5 text-sky-500" />
             </Link>
 
             {/* Mobile Hamburger Toggle */}
@@ -177,18 +189,28 @@ export const Navbar: React.FC = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* Prominent Admin Console Item in Mobile Menu */}
+          <div className="pt-2">
+            <Link
+              to="/admin/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-gray-900 dark:text-white bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/80 hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors"
+            >
+              <span className="flex items-center">
+                <Shield className="w-4 h-4 mr-2.5 text-sky-500" />
+                Admin Console
+              </span>
+              <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">
+                Sign In →
+              </span>
+            </Link>
+          </div>
+
           <div className="pt-4 border-t border-gray-100 dark:border-neutral-900 flex justify-between items-center px-2">
             <span className="text-xs text-gray-500 dark:text-neutral-400">
               AquaShine Chennai • +91 86681 81232
             </span>
-            <Link
-              to={isAuthenticated ? '/admin' : '/admin/login'}
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-xs text-sky-600 dark:text-sky-400 font-semibold flex items-center"
-            >
-              <Shield className="w-3.5 h-3.5 mr-1" />
-              Admin Portal
-            </Link>
           </div>
         </div>
       )}

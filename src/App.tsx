@@ -19,6 +19,7 @@ import { About } from './pages/About.js';
 import { Contact } from './pages/Contact.js';
 import { Privacy } from './pages/Privacy.js';
 import { Terms } from './pages/Terms.js';
+import { NotFound } from './pages/NotFound.js';
 
 // Admin Pages
 import { AdminLogin } from './pages/admin/AdminLogin.js';
@@ -80,6 +81,10 @@ export default function App() {
               <Route path="settings" element={<BusinessSettingsManager />} />
               <Route path="whatsapp" element={<WhatsAppManager />} />
               <Route path="account" element={<AccountManager />} />
+            </Route>
+            {/* Catch-all 404 Route */}
+            <Route element={<PublicLayout />}>
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </BrowserRouter>

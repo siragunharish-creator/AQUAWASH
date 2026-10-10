@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import {
   Sparkles,
   LayoutDashboard,
@@ -27,10 +27,24 @@ export const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Auth gate check
-  if (!isLoading && !isAuthenticated) {
-    navigate('/admin/login');
-    return null;
+  // Dedicated loading state to prevent flash or premature redirects
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-black text-gray-900 dark:text-neutral-100">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-10 h-10 border-3 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="text-center">
+            <p className="text-sm font-bold text-gray-900 dark:text-white">Verifying Admin Authorization</p>
+            <p className="text-xs text-gray-500 dark:text-neutral-400 mt-1">Connecting to Supabase...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth gate check with declarative Navigate
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
   }
 
   const navItems = [
@@ -154,6 +168,15 @@ export const AdminLayout: React.FC = () => {
               ) : (
                 <Moon className="w-4 h-4 text-sky-600" />
               )}
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-3.5 h-3.5 mr-1.5" />
+              <span>Sign Out</span>
             </button>
           </div>
         </header>

@@ -6,9 +6,13 @@ import {
   CalendarCheck,
   Sparkles,
   ArrowRight,
-  Filter
+  Filter,
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react';
 import { api } from '../lib/api.js';
+import { fetchServicesFromSupabase } from '../lib/supabase.js';
+import { FALLBACK_SERVICES } from '../data/fallbackServices.js';
 import { ServiceItem, VehicleType } from '../types/index.js';
 
 export const Services: React.FC = () => {
@@ -16,14 +20,42 @@ export const Services: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('sedan');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
-  useEffect(() => {
-    api.getServices()
-      .then(res => {
+  const loadServices = async () => {
+    setLoading(true);
+    setFetchError(null);
+    try {
+      // 1. First attempt to load via backend API (or Supabase via server)
+      const res = await api.getServices();
+      if (res && res.length > 0) {
         setServices(res);
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+        return;
+      }
+    } catch (err: any) {
+      console.warn('Backend /api/services error, attempting direct Supabase query:', err?.message);
+    }
+
+    // 2. Direct Supabase fallback in case of serverless routing issues on Vercel
+    try {
+      const supaServices = await fetchServicesFromSupabase();
+      if (supaServices && supaServices.length > 0) {
+        setServices(supaServices);
+        setLoading(false);
+        return;
+      }
+    } catch (supaErr: any) {
+      console.warn('Direct Supabase fetch error:', supaErr?.message);
+    }
+
+    // 3. Fallback catalog so customer is never presented with an empty or broken screen
+    setServices(FALLBACK_SERVICES);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadServices();
   }, []);
 
   const vehicleTabs: { id: VehicleType; label: string; desc: string }[] = [
@@ -112,10 +144,45 @@ export const Services: React.FC = () => {
           ))}
         </div>
 
-        {/* Services List */}
+        {/* Error notification if fetch failed */}
+        {fetchError && (
+          <div className="mb-8 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{fetchError} (Showing cached catalog).</span>
+            </div>
+            <button
+              onClick={loadServices}
+              className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-white font-bold hover:opacity-90"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>Retry</span>
+            </button>
+          </div>
+        )}
+
+        {/* Services List / Loading / Empty States */}
         {loading ? (
-          <div className="text-center py-20 text-gray-400">
-            Loading AquaShine service catalog...
+          <div className="text-center py-24 flex flex-col items-center justify-center space-y-4">
+            <div className="w-10 h-10 border-3 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm font-medium text-gray-500 dark:text-neutral-400">
+              Loading AquaShine service catalog & pricing...
+            </p>
+          </div>
+        ) : filteredServices.length === 0 ? (
+          <div className="text-center py-20 px-4 rounded-3xl bg-gray-50 dark:bg-neutral-900/50 border border-gray-200 dark:border-neutral-800 space-y-3">
+            <p className="text-base font-bold text-gray-800 dark:text-neutral-200">
+              No services found for this category.
+            </p>
+            <p className="text-xs text-gray-500 dark:text-neutral-400">
+              Try selecting another category above or view all treatments.
+            </p>
+            <button
+              onClick={() => setCategoryFilter('all')}
+              className="mt-2 px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white hover:bg-sky-500"
+            >
+              View All Services
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
