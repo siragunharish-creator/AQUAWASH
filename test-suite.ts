@@ -121,6 +121,15 @@ async function runTestSuite() {
   assert(vercelConfig.rewrites.some((r: any) => r.source === '/(.*)' && r.destination === '/index.html'), 'vercel.json rewrites SPA routes to /index.html');
   assert(fs.existsSync('./api/index.ts'), 'api/index.ts entry point exists for Vercel Serverless');
 
+  // 9. Testing Fallback Services Catalog & SUV Pricing
+  console.log('\n--- 9. Testing Fallback Services for Booking Flow ---');
+  const { FALLBACK_SERVICES } = await import('./src/data/fallbackServices.js');
+  assert(Array.isArray(FALLBACK_SERVICES) && FALLBACK_SERVICES.length >= 6, `FALLBACK_SERVICES contains ${FALLBACK_SERVICES?.length} services`);
+  const suvWash = FALLBACK_SERVICES.find((s: any) => s.id === 'srv-1');
+  assert(!!suvWash, 'Exterior Car Wash exists in FALLBACK_SERVICES');
+  assert(suvWash?.pricesByVehicle?.suv === 699, 'SUV price for Exterior Car Wash is ₹699');
+  assert(suvWash?.pricesByVehicle?.sedan === 599, 'Sedan price for Exterior Car Wash is ₹599');
+
   console.log('\n====================================================');
   console.log(` TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log('====================================================');

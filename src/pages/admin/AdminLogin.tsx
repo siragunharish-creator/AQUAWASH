@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { useTheme } from '../../context/ThemeContext.js';
-import { isSupabaseConfigured, SUPABASE_URL } from '../../lib/supabase.js';
+import { isSupabaseConfigured, SUPABASE_URL, saveCustomAnonKey } from '../../lib/supabase.js';
 
 export const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +28,8 @@ export const AdminLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [customKey, setCustomKey] = useState('');
+  const [showKeyInput, setShowKeyInput] = useState(false);
 
   useEffect(() => {
     if (authError) {
@@ -172,14 +174,52 @@ export const AdminLogin: React.FC = () => {
 
           {/* Environment check banner if Vercel publishable key is not yet set */}
           {!isSupabaseConfigured && (
-            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-800 dark:text-amber-300 flex items-start space-x-2.5">
-              <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" />
-              <div className="space-y-1">
-                <p className="font-bold">Supabase Publishable Key pending in Vercel</p>
-                <p className="text-[11px] leading-relaxed text-amber-700 dark:text-amber-400">
-                  To authenticate directly against Supabase, configure <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> and <code>VITE_SUPABASE_URL</code> in Vercel Project Settings → Environment Variables.
-                </p>
+            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-800 dark:text-amber-300 space-y-2">
+              <div className="flex items-start space-x-2.5">
+                <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" />
+                <div className="space-y-1">
+                  <p className="font-bold">Supabase Publishable Key pending in Vercel</p>
+                  <p className="text-[11px] leading-relaxed text-amber-700 dark:text-amber-400">
+                    To authenticate directly against Supabase, configure <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> in Vercel Project Settings → Environment Variables.
+                  </p>
+                </div>
               </div>
+
+              {!showKeyInput ? (
+                <button
+                  type="button"
+                  onClick={() => setShowKeyInput(true)}
+                  className="mt-1 text-xs text-sky-600 dark:text-sky-400 font-bold hover:underline"
+                >
+                  + Enter Supabase Anon Key manually to connect now
+                </button>
+              ) : (
+                <div className="pt-2 border-t border-amber-200/60 dark:border-amber-800/60 space-y-2">
+                  <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-200">
+                    Paste Supabase Anon/Publishable Key:
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+                      value={customKey}
+                      onChange={e => setCustomKey(e.target.value)}
+                      className="flex-1 px-3 py-1.5 rounded-lg border border-amber-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-xs font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (customKey.trim()) {
+                          saveCustomAnonKey(customKey.trim());
+                        }
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs hover:bg-sky-500"
+                    >
+                      Connect
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

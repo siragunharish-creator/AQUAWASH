@@ -17,7 +17,19 @@ import {
   Bike
 } from 'lucide-react';
 import { api } from '../lib/api.js';
+import { fetchServicesFromSupabase, createBookingInSupabase } from '../lib/supabase.js';
+import { FALLBACK_SERVICES } from '../data/fallbackServices.js';
 import { ServiceItem, VehicleType, AvailabilitySlot } from '../types/index.js';
+
+const DEFAULT_SLOTS = [
+  { time: '09:00 AM', available: true, currentBookings: 0, maxCapacity: 2 },
+  { time: '10:30 AM', available: true, currentBookings: 0, maxCapacity: 2 },
+  { time: '12:00 PM', available: true, currentBookings: 1, maxCapacity: 2 },
+  { time: '02:00 PM', available: true, currentBookings: 0, maxCapacity: 2 },
+  { time: '03:30 PM', available: true, currentBookings: 0, maxCapacity: 2 },
+  { time: '05:00 PM', available: true, currentBookings: 1, maxCapacity: 2 },
+  { time: '06:30 PM', available: true, currentBookings: 0, maxCapacity: 2 }
+];
 
 export const Booking: React.FC = () => {
   const navigate = useNavigate();
@@ -27,11 +39,11 @@ export const Booking: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Data from backend
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [loadingServices, setLoadingServices] = useState(true);
+  const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
+  const [loadingServices, setLoadingServices] = useState(false);
 
   // Step 1: Vehicle State
-  const initialVehicle = (searchParams.get('vehicle') as VehicleType) || 'sedan';
+  const initialVehicle = (searchParams.get('vehicle') as VehicleType) || 'suv';
   const [vehicleType, setVehicleType] = useState<VehicleType>(initialVehicle);
   const [vehicleModel, setVehicleModel] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -49,8 +61,12 @@ export const Booking: React.FC = () => {
     date: string;
     isHoliday: boolean;
     slots: { time: string; available: boolean; currentBookings: number; maxCapacity: number }[];
-  } | null>(null);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
+  }>({
+    date: getTodayStr(),
+    isHoliday: false,
+    slots: DEFAULT_SLOTS
+  });
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('10:30 AM');
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   // Step 4: Customer Details
@@ -68,28 +84,47 @@ export const Booking: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Fetch Services
+  // Fetch Services from Supabase, then API, then Fallback
+  const loadServices = async () => {
+    try {
+      const sbServices = await fetchServicesFromSupabase();
+      if (sbServices && sbServices.length > 0) {
+        setServices(sbServices);
+        return;
+      }
+    } catch (_) {}
+
+    try {
+      const apiServices = await api.getServices();
+      if (apiServices && apiServices.length > 0) {
+        setServices(apiServices);
+        return;
+      }
+    } catch (_) {}
+
+    // Ensure fallback services are loaded
+    setServices(FALLBACK_SERVICES);
+  };
+
   useEffect(() => {
-    api.getServices()
-      .then(res => {
-        setServices(res);
-        setLoadingServices(false);
-      })
-      .catch(() => setLoadingServices(false));
+    loadServices();
   }, []);
 
   // Fetch Slots whenever selectedDate changes
   useEffect(() => {
     if (!selectedDate) return;
     setLoadingSlots(true);
-    setSelectedTimeSlot('');
     api.getAvailability(selectedDate)
       .then(res => {
-        setSlotsData(res);
+        if (res && res.slots && res.slots.length > 0) {
+          setSlotsData(res);
+        } else {
+          setSlotsData({ date: selectedDate, isHoliday: false, slots: DEFAULT_SLOTS });
+        }
         setLoadingSlots(false);
       })
-      .catch(err => {
-        console.error('Error fetching availability:', err);
+      .catch(() => {
+        setSlotsData({ date: selectedDate, isHoliday: false, slots: DEFAULT_SLOTS });
         setLoadingSlots(false);
       });
   }, [selectedDate]);
@@ -186,31 +221,58 @@ export const Booking: React.FC = () => {
     setErrorMsg(null);
     setSubmitting(true);
 
-    try {
-      const res = await api.createBooking({
-        customerName,
-        customerPhone,
-        customerWhatsapp: sameAsPhone ? customerPhone : customerWhatsapp,
-        customerEmail: customerEmail || undefined,
-        vehicleType,
-        vehicleModel,
-        registrationNumber,
-        appointmentDate: selectedDate,
-        appointmentTime: selectedTimeSlot,
-        serviceLocation,
-        locationAddress: serviceLocation === 'doorstep' ? locationAddress : undefined,
-        additionalNotes: additionalNotes || undefined,
-        serviceIds: selectedServiceIds,
-        whatsappConsent
-      });
+    const bookingPayload = {
+      customerName,
+      customerPhone,
+      customerWhatsapp: sameAsPhone ? customerPhone : customerWhatsapp,
+      customerEmail: customerEmail || undefined,
+      vehicleType,
+      vehicleModel,
+      registrationNumber,
+      appointmentDate: selectedDate,
+      appointmentTime: selectedTimeSlot,
+      serviceLocation,
+      locationAddress: serviceLocation === 'doorstep' ? locationAddress : undefined,
+      additionalNotes: additionalNotes || undefined,
+      serviceIds: selectedServiceIds,
+      whatsappConsent
+    };
 
+    try {
+      const res = await api.createBooking(bookingPayload);
       if (res.success && res.bookingReference) {
         navigate(`/booking-confirmation/${res.bookingReference}`, {
           state: { booking: res.booking }
         });
-      } else {
-        throw new Error(res.message || 'Booking could not be created.');
+        return;
       }
+    } catch (apiErr: any) {
+      console.warn('Backend API booking creation failed, attempting direct Supabase insert:', apiErr);
+    }
+
+    try {
+      const formattedServices = selectedServiceObjects.map(s => ({
+        serviceId: s.id,
+        serviceName: s.name,
+        price: s.pricesByVehicle?.[vehicleType] || s.basePrice
+      }));
+
+      const sbRes = await createBookingInSupabase({
+        ...bookingPayload,
+        selectedServices: formattedServices,
+        subtotal,
+        discountAmount: totalDiscount,
+        taxAmount,
+        totalAmount
+      });
+
+      if (sbRes.success && sbRes.bookingReference) {
+        navigate(`/booking-confirmation/${sbRes.bookingReference}`, {
+          state: { booking: sbRes.booking }
+        });
+        return;
+      }
+      throw new Error(sbRes.message || 'Booking could not be created.');
     } catch (err: any) {
       setErrorMsg(err.message || 'An error occurred while confirming your booking.');
       setSubmitting(false);
@@ -374,7 +436,23 @@ export const Booking: React.FC = () => {
               </div>
 
               {loadingServices ? (
-                <div className="text-center py-10 text-gray-400">Loading services...</div>
+                <div className="text-center py-12 text-gray-400 space-y-3">
+                  <div className="w-8 h-8 border-3 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                  <p className="text-xs">Loading available services for your {vehicleType.toUpperCase()}...</p>
+                </div>
+              ) : services.length === 0 ? (
+                <div className="text-center py-10 p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 space-y-3">
+                  <p className="text-xs sm:text-sm font-semibold text-amber-900 dark:text-amber-300">
+                    No services found. Click below to load standard detailing packages.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={loadServices}
+                    className="px-4 py-2 rounded-xl bg-sky-600 text-white font-bold text-xs hover:bg-sky-500 transition-colors"
+                  >
+                    Load Services
+                  </button>
+                </div>
               ) : (
                 <div className="space-y-3">
                   {services.map(s => {

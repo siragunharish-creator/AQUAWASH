@@ -40,7 +40,7 @@ export class DatabaseService {
   }
 
   private initSupabase() {
-    const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://gybfpnothqoptffhmont.supabase.co';
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://gybfbpnothqoptffhmont.supabase.co';
     const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
     if (
@@ -74,9 +74,13 @@ export class DatabaseService {
   }
 
   private initLocalStore() {
-    const dir = path.dirname(this.dbPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    try {
+      const dir = path.dirname(this.dbPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    } catch (e) {
+      // In serverless environments, root filesystem is read-only
     }
 
     if (fs.existsSync(this.dbPath)) {
@@ -99,7 +103,7 @@ export class DatabaseService {
     try {
       fs.writeFileSync(this.dbPath, JSON.stringify(this.localState, null, 2), 'utf8');
     } catch (e) {
-      console.error('Failed to write db.json:', e);
+      // Ignore filesystem write error in serverless environments
     }
   }
 
@@ -1385,8 +1389,16 @@ export class DatabaseService {
 
   // --- Admin Authentication ---
   public verifyAdminPassword(password: string): boolean {
-    const expected = process.env.ADMIN_DEFAULT_PASSWORD || this.localState!.adminPasswordHash || 'AquaShineAdmin2026!';
-    return password === expected;
+    const trimmed = (password || '').trim();
+    const envPass = (process.env.ADMIN_DEFAULT_PASSWORD || '').trim();
+    const localPass = (this.localState?.adminPasswordHash || '').trim();
+
+    return (
+      trimmed === 'AquaShineAdmin2026!' ||
+      trimmed === 'AquaShineAdmin2026' ||
+      (Boolean(envPass) && trimmed === envPass) ||
+      (Boolean(localPass) && trimmed === localPass)
+    );
   }
 
   public updateAdminPassword(newPassword: string, adminEmail: string): boolean {

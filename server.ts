@@ -20,10 +20,18 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Ensure uploads directory exists
-const uploadsDir = path.resolve(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+// Ensure uploads directory exists safely (use /tmp in serverless environments)
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const uploadsDir = isServerless
+  ? path.resolve('/tmp', 'uploads')
+  : path.resolve(__dirname, 'uploads');
+
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (e) {
+  // Ignore read-only filesystem errors in cloud environments
 }
 app.use('/uploads', express.static(uploadsDir));
 
@@ -801,8 +809,16 @@ async function startServer() {
 export { app };
 export default app;
 
-// Do not call listen on Vercel serverless environment
-if (process.env.VERCEL !== '1' && !process.env.VERCEL_ENV) {
+// Only start standalone HTTP listener when executed directly from CLI, never when imported as a module in serverless functions
+const isDirectCliExecution = Boolean(
+  process.argv[1] &&
+  (process.argv[1].endsWith('server.ts') || process.argv[1].endsWith('server.js')) &&
+  !process.env.VERCEL &&
+  !process.env.VERCEL_ENV &&
+  !process.env.AWS_LAMBDA_FUNCTION_NAME
+);
+
+if (isDirectCliExecution) {
   startServer().catch(err => {
     console.error('Failed to start server:', err);
     process.exit(1);
