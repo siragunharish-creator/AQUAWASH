@@ -387,12 +387,20 @@ app.post('/api/admin/login', (req, res) => {
     'Administrator logged in successfully'
   );
 
+  const displayEmail = providedIdentifier.includes('@')
+    ? providedIdentifier
+    : (providedIdentifier === 'harish' ? 'harish@aquashinecarcare.in' : validEmail);
+
+  const displayName = providedIdentifier.includes('harish')
+    ? 'Harish (Administrator)'
+    : 'AquaShine Administrator';
+
   res.json({
     success: true,
     token,
     user: {
-      email: providedIdentifier || validEmail,
-      name: 'AquaShine SuperAdmin',
+      email: displayEmail,
+      name: displayName,
       role: 'admin'
     }
   });

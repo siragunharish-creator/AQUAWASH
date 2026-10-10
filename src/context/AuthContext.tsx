@@ -22,6 +22,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const ADMIN_SESSION_KEY = 'aquashine_admin_session';
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -32,6 +34,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setAuthError(null);
 
+    // 0. Check persistent local admin session first
+    const storedSession = localStorage.getItem(ADMIN_SESSION_KEY);
+    if (storedSession) {
+      try {
+        const parsed = JSON.parse(storedSession);
+        if (parsed && (parsed.role === 'admin' || parsed.email)) {
+          setUser(parsed);
+          setIsLoading(false);
+          return;
+        }
+      } catch (_) {}
+    }
+
     // 1. Try restoring Supabase Auth Session
     if (isSupabaseConfigured) {
       try {
@@ -41,22 +56,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else if (session?.user) {
           const verification = await verifyAdminUser(session.user.id);
           if (verification.isAdmin) {
-            setUser({
+            const adminData: AdminUser = {
               id: session.user.id,
-              email: session.user.email || 'admin@aquashinecarcare.in',
-              name: session.user.user_metadata?.full_name || 'AquaShine Administrator',
+              email: session.user.email || 'harish@aquashinecarcare.in',
+              name: session.user.user_metadata?.full_name || 'Harish (Administrator)',
               role: verification.role || 'admin'
-            });
+            };
+            setUser(adminData);
             setIsSupabaseAuth(true);
             setAdminToken(session.access_token);
+            localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(adminData));
             setIsLoading(false);
             return;
-          } else {
-            // User session exists in Supabase Auth but user is NOT an admin
-            console.warn('Authenticated user not authorized in public.admin_users:', session.user.id);
-            setAuthError(verification.error || 'Your account does not have administrator access.');
-            setUser(null);
-            clearAdminToken();
           }
         }
       } catch (err: any) {
@@ -69,12 +80,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       try {
         const me = await api.adminGetMe();
-        setUser({
+        const adminData: AdminUser = {
           email: me.email,
           name: me.name,
           role: me.role
-        });
+        };
+        setUser(adminData);
         setIsSupabaseAuth(false);
+        localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(adminData));
       } catch (err) {
         clearAdminToken();
         setUser(null);
@@ -95,23 +108,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (event === 'SIGNED_IN' && session?.user) {
           const verification = await verifyAdminUser(session.user.id);
           if (verification.isAdmin) {
-            setUser({
+            const adminData: AdminUser = {
               id: session.user.id,
-              email: session.user.email || 'admin@aquashinecarcare.in',
-              name: session.user.user_metadata?.full_name || 'AquaShine Administrator',
+              email: session.user.email || 'harish@aquashinecarcare.in',
+              name: session.user.user_metadata?.full_name || 'Harish (Administrator)',
               role: verification.role || 'admin'
-            });
+            };
+            setUser(adminData);
             setIsSupabaseAuth(true);
             setAdminToken(session.access_token);
+            localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(adminData));
             setAuthError(null);
-          } else {
-            setUser(null);
-            clearAdminToken();
-            setAuthError(verification.error || 'Your account does not have administrator access.');
           }
         } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          clearAdminToken();
+          // Only clear if not in standalone admin mode
+          if (!localStorage.getItem(ADMIN_SESSION_KEY)) {
+            setUser(null);
+            clearAdminToken();
+          }
         }
       });
 
@@ -121,78 +135,97 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (email: string, pass: string) => {
+  const login = async (identifier: string, pass: string) => {
     setIsLoading(true);
     setAuthError(null);
 
-    // 1. If Supabase is configured, use official Supabase Auth
-    if (isSupabaseConfigured) {
+    const cleanUser = (identifier || '').trim().toLowerCase();
+    const cleanPass = (pass || '').trim();
+
+    // 1. Direct credentials verification: username "harish" / password "vshn1996"
+    // Also accept admin / AquaShineAdmin2026!
+    const isDirectMatch =
+      (
+        cleanUser === 'harish' ||
+        cleanUser === 'harish@aquashinecarcare.in' ||
+        cleanUser === 'admin' ||
+        cleanUser === 'admin@aquashinecarcare.in' ||
+        cleanUser === 'siragunvsh@gmail.com'
+      ) &&
+      (
+        cleanPass === 'vshn1996' ||
+        cleanPass === 'aquashineadmin2026!' ||
+        cleanPass === 'aquashineadmin2026'
+      );
+
+    if (isDirectMatch) {
+      const adminData: AdminUser = {
+        id: ADMIN_UUID,
+        email: cleanUser.includes('@') ? cleanUser : 'harish@aquashinecarcare.in',
+        name: cleanUser.includes('harish') ? 'Harish (Administrator)' : 'AquaShine Administrator',
+        role: 'admin'
+      };
+
+      const token = `aq_adm_${Date.now()}_${Math.random().toString(36).substring(2)}`;
+      setAdminToken(token);
+      localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(adminData));
+      setUser(adminData);
+      setIsSupabaseAuth(false);
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Try Supabase Auth if configured and input is an email address
+    if (isSupabaseConfigured && cleanUser.includes('@')) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password: pass
+          email: cleanUser,
+          password: cleanPass
         });
 
-        if (error) {
-          setIsLoading(false);
-          // Friendly message mapping for Supabase Auth errors
-          if (error.message.toLowerCase().includes('email not confirmed')) {
-            throw new Error('Email address not confirmed. Please verify your email inbox or disable email confirmations in Supabase Auth.');
+        if (!error && data?.user) {
+          const verification = await verifyAdminUser(data.user.id);
+          if (verification.isAdmin) {
+            const adminData: AdminUser = {
+              id: data.user.id,
+              email: data.user.email || cleanUser,
+              name: data.user.user_metadata?.full_name || 'Harish (Administrator)',
+              role: verification.role || 'admin'
+            };
+            setUser(adminData);
+            setIsSupabaseAuth(true);
+            if (data.session?.access_token) {
+              setAdminToken(data.session.access_token);
+            }
+            localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(adminData));
+            setIsLoading(false);
+            return;
           }
-          if (error.message.toLowerCase().includes('invalid login credentials')) {
-            throw new Error('Invalid email or password. Please verify your Supabase Auth administrator credentials.');
-          }
-          throw new Error(error.message);
         }
+      } catch (_) {}
+    }
 
-        if (!data.user) {
-          setIsLoading(false);
-          throw new Error('Authentication succeeded but user profile was not returned.');
-        }
-
-        // 2. Verify administrator authorization against public.admin_users
-        const verification = await verifyAdminUser(data.user.id);
-        if (!verification.isAdmin) {
-          await supabase.auth.signOut();
-          setIsLoading(false);
-          const deniedMsg = verification.error || 'Your account does not have administrator access.';
-          setAuthError(deniedMsg);
-          throw new Error(deniedMsg);
-        }
-
-        setUser({
-          id: data.user.id,
-          email: data.user.email || email,
-          name: data.user.user_metadata?.full_name || 'AquaShine Administrator',
-          role: verification.role || 'admin'
-        });
-        setIsSupabaseAuth(true);
-        if (data.session?.access_token) {
-          setAdminToken(data.session.access_token);
-        }
+    // 3. Fallback to server endpoint
+    try {
+      const res = await api.adminLogin(cleanUser, cleanPass);
+      if (res.user) {
+        setUser(res.user);
+        setIsSupabaseAuth(false);
+        localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(res.user));
         setIsLoading(false);
         return;
-      } catch (err: any) {
-        setIsLoading(false);
-        throw err;
       }
-    }
+    } catch (_) {}
 
-    // 2. Fallback to server endpoint if publishable key is not set in environment
-    try {
-      const res = await api.adminLogin(email, pass);
-      setUser(res.user);
-      setIsSupabaseAuth(false);
-    } catch (err: any) {
-      const fallbackErr = err.message || 'Administrator sign-in failed. Check server connection or Supabase environment variables.';
-      setAuthError(fallbackErr);
-      throw new Error(fallbackErr);
-    } finally {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
+    const deniedMsg = 'Invalid credentials. Please use username: harish and password: vshn1996';
+    setAuthError(deniedMsg);
+    throw new Error(deniedMsg);
   };
 
   const logout = async () => {
+    localStorage.removeItem(ADMIN_SESSION_KEY);
+    clearAdminToken();
     if (isSupabaseConfigured) {
       try {
         await supabase.auth.signOut();
@@ -201,7 +234,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await api.adminLogout();
     } catch (_) {}
-    clearAdminToken();
     setUser(null);
     setAuthError(null);
   };

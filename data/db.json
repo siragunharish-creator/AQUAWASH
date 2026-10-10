@@ -398,6 +398,38 @@
   ],
   "bookings": [
     {
+      "id": "bk-1791624901318-3y9gv",
+      "bookingReference": "AQ-2610-5915",
+      "customerName": "Karthik Raja",
+      "customerPhone": "+91 98401 11223",
+      "customerWhatsapp": "+91 98401 11223",
+      "customerEmail": "karthik@example.com",
+      "vehicleType": "sedan",
+      "vehicleModel": "Honda City ZX",
+      "registrationNumber": "TN 09 BX 7788",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "10:00",
+      "serviceLocation": "studio",
+      "selectedServices": [
+        {
+          "serviceId": "srv-2",
+          "serviceName": "Foam Wash",
+          "price": 799,
+          "durationMins": 50
+        }
+      ],
+      "subtotal": 799,
+      "discountAmount": 120,
+      "taxAmount": 122,
+      "totalAmount": 801,
+      "status": "In Progress",
+      "paymentStatus": "Pending",
+      "paymentMethod": "Pay at Facility",
+      "whatsappConsent": true,
+      "createdAt": "2026-10-10T09:35:01.318Z",
+      "updatedAt": "2026-10-10T09:35:01.773Z"
+    },
+    {
       "id": "bk-1791616668622-ttpwy",
       "bookingReference": "AQ-2610-4092",
       "customerName": "Karthik Raja",
@@ -934,6 +966,15 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud-1791624901984-681",
+      "adminEmail": "admin@aquashinecarcare.in",
+      "action": "UPDATE_BOOKING_STATUS",
+      "targetType": "bookings",
+      "targetId": "AQ-2610-5915",
+      "details": "Changed status to In Progress (Payment: Pending)",
+      "timestamp": "2026-10-10T09:35:01.984Z"
+    },
     {
       "id": "aud-1791616669204-985",
       "adminEmail": "admin@aquashinecarcare.in",

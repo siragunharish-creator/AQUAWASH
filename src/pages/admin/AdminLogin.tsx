@@ -23,8 +23,8 @@ export const AdminLogin: React.FC = () => {
   const { login, isAuthenticated, isLoading, user, logout, authError } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('harish');
+  const [password, setPassword] = useState('vshn1996');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -88,7 +88,7 @@ export const AdminLogin: React.FC = () => {
 
         <div className="relative z-10 text-xs text-neutral-400 border-t border-neutral-800 pt-6 flex justify-between items-center">
           <span>AquaShine Car Care • Chennai, Tamil Nadu</span>
-          <span>Protected by Supabase Auth</span>
+          <span>Fast Admin Console Access</span>
         </div>
       </div>
 
@@ -118,31 +118,55 @@ export const AdminLogin: React.FC = () => {
         </div>
 
         {/* Center Form Container */}
-        <div className="max-w-md w-full mx-auto my-auto py-10 space-y-6">
+        <div className="max-w-md w-full mx-auto my-auto py-8 space-y-5">
           <div>
-            <div className="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-500 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-500 flex items-center justify-center mb-3">
               <Shield className="w-6 h-6" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
               Administrator Sign In
             </h1>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-neutral-400 mt-1">
-              Sign in with your Supabase administrator account to access the Chennai operations dashboard.
+              Sign in to manage bookings, services, gallery, and website settings.
             </p>
+          </div>
+
+          {/* Quick Credentials Card */}
+          <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 text-xs flex items-center justify-between">
+            <div>
+              <span className="font-bold text-sky-900 dark:text-sky-200 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                Admin Credentials Configured:
+              </span>
+              <div className="text-[11px] text-sky-700 dark:text-sky-300 font-mono mt-0.5">
+                Username: <strong className="font-bold">harish</strong> • Password: <strong className="font-bold">vshn1996</strong>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('harish');
+                setPassword('vshn1996');
+                setErrorMsg(null);
+              }}
+              className="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] shadow-sm transition-colors cursor-pointer"
+            >
+              Auto-Fill
+            </button>
           </div>
 
           {/* Already authenticated banner */}
           {isAuthenticated && user && !isLoading && (
-            <div className="p-4 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-900/60 text-xs text-sky-900 dark:text-sky-300 space-y-2">
+            <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-xs text-emerald-900 dark:text-emerald-300 space-y-2">
               <div className="flex items-center space-x-2 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Already authenticated as: {user.email}</span>
+                <span>Authenticated as: {user.name || user.email}</span>
               </div>
               <div className="flex space-x-2 pt-1">
                 <button
                   type="button"
                   onClick={() => navigate('/admin')}
-                  className="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold hover:bg-sky-500 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-500 transition-colors"
                 >
                   Go to Dashboard →
                 </button>
@@ -163,79 +187,23 @@ export const AdminLogin: React.FC = () => {
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <p className="font-semibold">{errorMsg}</p>
-                {errorMsg.includes('admin_users') && (
-                  <p className="text-[11px] text-red-600/80 dark:text-red-400/80">
-                    Tip: Ensure the user's UUID is recorded in the <code>public.admin_users</code> table with <code>role = 'admin'</code> and that RLS policies allow reading.
-                  </p>
-                )}
               </div>
-            </div>
-          )}
-
-          {/* Environment check banner if Vercel publishable key is not yet set */}
-          {!isSupabaseConfigured && (
-            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 text-xs text-amber-800 dark:text-amber-300 space-y-2">
-              <div className="flex items-start space-x-2.5">
-                <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" />
-                <div className="space-y-1">
-                  <p className="font-bold">Supabase Publishable Key pending in Vercel</p>
-                  <p className="text-[11px] leading-relaxed text-amber-700 dark:text-amber-400">
-                    To authenticate directly against Supabase, configure <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> in Vercel Project Settings → Environment Variables.
-                  </p>
-                </div>
-              </div>
-
-              {!showKeyInput ? (
-                <button
-                  type="button"
-                  onClick={() => setShowKeyInput(true)}
-                  className="mt-1 text-xs text-sky-600 dark:text-sky-400 font-bold hover:underline"
-                >
-                  + Enter Supabase Anon Key manually to connect now
-                </button>
-              ) : (
-                <div className="pt-2 border-t border-amber-200/60 dark:border-amber-800/60 space-y-2">
-                  <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-200">
-                    Paste Supabase Anon/Publishable Key:
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..."
-                      value={customKey}
-                      onChange={e => setCustomKey(e.target.value)}
-                      className="flex-1 px-3 py-1.5 rounded-lg border border-amber-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-xs font-mono"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (customKey.trim()) {
-                          saveCustomAnonKey(customKey.trim());
-                        }
-                      }}
-                      className="px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs hover:bg-sky-500"
-                    >
-                      Connect
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-neutral-400 mb-2">
-                Administrator Email
+                Administrator Username
               </label>
               <div className="relative">
                 <input
-                  type="email"
+                  type="text"
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="admin@aquashinecarcare.in"
-                  className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="harish"
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
                 />
                 <Mail className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
               </div>
@@ -251,8 +219,8 @@ export const AdminLogin: React.FC = () => {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter administrator password"
-                  className="w-full pl-11 pr-12 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="vshn1996"
+                  className="w-full pl-11 pr-12 py-3.5 rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
                 />
                 <Lock className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <button

@@ -96,6 +96,8 @@ async function runTestSuite() {
   console.log('\n--- 6. Testing Admin Security Authentication ---');
   const validPass = dbService.verifyAdminPassword('AquaShineAdmin2026!');
   assert(validPass === true, 'Default admin password validated successfully');
+  const harishPass = dbService.verifyAdminPassword('vshn1996');
+  assert(harishPass === true, 'Harish password (vshn1996) validated successfully');
 
   const invalidPass = dbService.verifyAdminPassword('wrongpassword123');
   assert(invalidPass === false, 'Invalid admin password rejected properly');
